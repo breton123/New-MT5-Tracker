@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dashboard</title>
+		<script src="{{url_for('static', filename='plotly-2.32.0.min.js')}}"></script>
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<h1>Account</h1>
+			</header>
+
+			<div class="main-content">
+				<!-- Sidebar -->
+				<div class="top-container">
+					<aside class="sidebar">
+						<h2>Filters</h2>
+						<div class="filter-group">
+							<label for="profitRange">Profit Range:</label>
+							<input
+								type="range"
+								id="profitRange"
+								name="profitRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+						<div class="filter-group">
+							<label for="tradesRange">Trades Range:</label>
+							<input
+								type="range"
+								id="tradesRange"
+								name="tradesRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+						<div class="filter-group">
+							<label for="maxDrawdownRange">Max Drawdown Range:</label>
+							<input
+								type="range"
+								id="maxDrawdownRange"
+								name="maxDrawdownRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+						<div class="filter-group">
+							<label for="profitFactorRange">Profit Factor Range:</label>
+							<input
+								type="range"
+								id="profitFactorRange"
+								name="profitFactorRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+						<div class="filter-group">
+							<label for="returnOnDrawdownRange"
+								>Return on Drawdown Range:</label
+							>
+							<input
+								type="range"
+								id="returnOnDrawdownRange"
+								name="returnOnDrawdownRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+						<div class="filter-group">
+							<label for="daysLiveRange">Days Live Range:</label>
+							<input
+								type="range"
+								id="daysLiveRange"
+								name="daysLiveRange"
+								min="0"
+								max="100"
+								value="0"
+							/>
+						</div>
+
+						<div class="filter-group">
+							<label for="equityWindow">Equity Graph Window Size:</label>
+							<input
+								type="number"
+								id="equityWindow"
+								name="equityWindow"
+								min="1"
+								value="3"
+							/>
+						</div>
+						<button id="applyFilters">Apply Filters</button>
+						<button id="resetFilters">Reset Filters</button>
+					</aside>
+
+					<!-- Main content (Table and Graphs) -->
+					<div class="main-section">
+						<section class="table-section">
+							<h2>Sets</h2>
+							<table id="data-table">
+								<thead>
+									<tr>
+										<th>Set Name</th>
+										<th>Strategy</th>
+										<th>Magic</th>
+										<th>Profit</th>
+										<th>Trades</th>
+										<th>Max Drawdown</th>
+										<th>Profit Factor</th>
+										<th>Return on Drawdown</th>
+										<th>Days Live</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+							<div class="no-trades-section">
+								<h1>Waiting for trades...</h1>
+								<h1>Not added any sets? Use the set loader</h1>
+								<a href="/set_loader"><button>Upload Sets</button></a>
+							</div>
+						</section>
+					</div>
+
+					<!-- Graphs Container -->
+				</div>
+			</div>
+		</div>
+		<script src="{{url_for('static', filename='script.js')}}"></script>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='styles.css') }}"
+		/>
+	</body>
+</html>
