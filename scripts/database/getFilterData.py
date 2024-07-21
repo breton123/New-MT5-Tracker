@@ -54,6 +54,10 @@ def getFilterData(account):
                 maxDrawdown = 0
             if avgDrawdown == "-":
                 avgDrawdown = 0
+            try:
+                avgDrawdown = int(avgDrawdown)
+            except:
+                avgDrawdown = 0
             if returnOnDrawdown == "-":
                 returnOnDrawdown = 0
             if not daysLive:

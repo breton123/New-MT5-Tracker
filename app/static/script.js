@@ -452,6 +452,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	window.addEventListener("resize", onResize);
 
 	function deleteSet() {
+		const url = window.location.href;
+		const urlObject = new URL(url);
+		const pathname = urlObject.pathname;
+		const segments = pathname.split("/");
+		const selectedAccount = segments.pop();
+		var magicNumbers = Array.from(
+			tableBody.querySelectorAll(".row-select:checked")
+		).map((checkbox) => {
+			return checkbox.closest("tr").querySelector("td:nth-child(3)")
+				.textContent; // Magic number
+		});
 		fetch("/delete-set", {
 			method: "POST",
 			headers: {
@@ -459,17 +470,19 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 			body: JSON.stringify({
 				account: selectedAccount,
-				magicNumbers: selectedRows,
+				magicNumbers: magicNumbers,
 			}),
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				console.log("Success:", data);
+				window.location.reload();
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				window.location.reload();
 			});
 	}
+
+	deleteSetButton.addEventListener("click", deleteSet);
 
 	accounts.forEach((account) => {
 		var option = document.createElement("option");

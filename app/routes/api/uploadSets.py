@@ -43,7 +43,7 @@ def upload_files():
 
     loadSets(account, profileName)
     
-    return redirect(url_for('index'))
+    return redirect(url_for('index.index'))
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

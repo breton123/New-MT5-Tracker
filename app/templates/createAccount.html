@@ -13,14 +13,16 @@
 		<div class="container">
 			<header>
 				<h1>Create New Account</h1>
-				<a href="{{ url_for('index') }}"><button>Back to Dashboard</button></a>
+				<a href="{{ url_for('index.index') }}"
+					><button>Back to Dashboard</button></a
+				>
 			</header>
 
 			<section class="form-section">
 				<form
 					id="create-account-form"
 					method="POST"
-					action="{{ url_for('create_account') }}"
+					action="{{ url_for('create_account.create_account') }}"
 				>
 					<div class="form-group">
 						<label for="name">Account Name:</label>

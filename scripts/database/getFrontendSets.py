@@ -27,7 +27,7 @@ def getFrontendSets(account):
         print(errMsg)
         log_error(errMsg)
     except FileNotFoundError as e:
-        if folder_path != "C:\\Users\\Server\\AppData\\Local\\Mt5TrackerDatabase\\favicon.ico":
+        if folder_path != os.path.join(databaseFolder, "favicon.ico"):
             errMsg = f"Account: {account}  Task: (Get Frontend Sets)  FileNotFoundError: {e} - Account folder '{folder_path}' not found"
             print(errMsg)
             log_error(errMsg)

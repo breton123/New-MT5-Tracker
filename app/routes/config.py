@@ -13,7 +13,7 @@ def config():
         symbolSuffix = request.form['symbolSuffix']
         config = {"powName": powName, "powAPIKey": powAPIKey,  "symbolSuffix": symbolSuffix}
         save_config(config)
-        return redirect(url_for('config'))
+        return redirect(url_for('config.config'))
 
     config = load_config()
     return render_template('config.html', config=config)

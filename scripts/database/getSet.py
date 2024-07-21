@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.log_error import log_error
 from scripts.tracker.createSet import createSet
 
@@ -30,10 +31,11 @@ def getSet(magic, account):
         return {}
     
     except FileNotFoundError:
-        errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Set)  File {magic}.json not found"
-        createSet(magic, accountData)
-        print(errMsg)
-        log_error(errMsg)
+        if str(magic) not in getDeletedSets(account):
+            errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Set)  File {magic}.json not found"
+            createSet(magic, accountData)
+            print(errMsg)
+            log_error(errMsg)
         return {}
     
     except KeyError as e:

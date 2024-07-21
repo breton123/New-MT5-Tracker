@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from scripts.tracker.addCopier import addCopier
 
 copyToAccount_bp = Blueprint('copyToAccount', __name__)
 
@@ -8,7 +9,7 @@ def copy_to_account():
     masterAccountID = data.get("masterAccount")
     account = data.get('account')
     magic_numbers = data.get('magicNumbers')
-    loader.addCopier(masterAccountID, account, magic_numbers)
+    addCopier(masterAccountID, account, magic_numbers)
     # Process the magic numbers and copy them to the selected account
     # Your logic here
 

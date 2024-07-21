@@ -1,6 +1,7 @@
 import MetaTrader5 as mt5
 import datetime as datetime
 from datetime import datetime
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.getSet import getSet
 from scripts.database.insertTrade import insertTrade
 from scripts.database.isTradeExists import isTradeExists
@@ -10,6 +11,7 @@ from scripts.database.updateProfitFactor import updateProfitFactor
 from scripts.tracker.getHistoricalProfit import getHistoricalProfit
 from scripts.tracker.openMt5 import openMt5
 
+tickets = []
 
 def updateHistoricalTrades(account):
     global tickets
@@ -31,48 +33,49 @@ def updateHistoricalTrades(account):
             if order[8] == 4:
                 order_id = order[0]
                 if order_id not in tickets:
-                    try:
-                        currentSet = getSet(orderMagic, accountData)
-                    except Exception as e:
-                        errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  Error getting current set: {e}"
-                        print(errMsg)
-                        log_error(errMsg)
-                        continue
-                    
-                    try:
-                          currentTrades = currentSet["trades"]
-                    except KeyError as e:
-                        errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  KeyError: {e} - 'trades' key not found in current set"
-                        print(errMsg)
-                        log_error(errMsg)
-                        continue
-                    
-                    try:
-                        if not isTradeExists(currentTrades, order_id):
-                            orderTime = order[2]
-                            volume = order[9]
-                            price = order[10]
-                            profit = round(order[13], 2)
-                            symbol = order[15]
-                            newTrade = {
-                                "id": order_id,
-                                "time": orderTime,
-                                "volume": volume,
-                                "price": price,
-                                "profit": profit,
-                                "symbol": symbol
-                            }
-                            insertTrade(orderMagic, newTrade, account)
-                            updateProfitFactor(orderMagic, accountData)
-                            updateProfit(orderMagic, getHistoricalProfit(orderMagic, accountData), account)
-                            tickets.append(order_id)
-                            print(f"New historical trade for {orderMagic}")
-                        else:
-                            tickets.append(order_id)
-                    except Exception as e:
-                        errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  Error processing trade: {e}"
-                        print(errMsg)
-                        log_error(errMsg)
+                    if str(orderMagic) not in getDeletedSets(account):
+                        try:
+                            currentSet = getSet(orderMagic, accountData)
+                        except Exception as e:
+                            errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  Error getting current set: {e}"
+                            print(errMsg)
+                            log_error(errMsg)
+                            continue
+                        
+                        try:
+                            currentTrades = currentSet["trades"]
+                        except KeyError as e:
+                            errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  KeyError: {e} - 'trades' key not found in current set"
+                            print(errMsg)
+                            log_error(errMsg)
+                            continue
+                        
+                        try:
+                            if not isTradeExists(currentTrades, order_id):
+                                orderTime = order[2]
+                                volume = order[9]
+                                price = order[10]
+                                profit = round(order[13], 2)
+                                symbol = order[15]
+                                newTrade = {
+                                    "id": order_id,
+                                    "time": orderTime,
+                                    "volume": volume,
+                                    "price": price,
+                                    "profit": profit,
+                                    "symbol": symbol
+                                }
+                                insertTrade(orderMagic, newTrade, account)
+                                updateProfitFactor(orderMagic, accountData)
+                                updateProfit(orderMagic, getHistoricalProfit(orderMagic, accountData), account)
+                                tickets.append(order_id)
+                                print(f"New historical trade for {orderMagic}")
+                            else:
+                                tickets.append(order_id)
+                        except Exception as e:
+                            errMsg = f"Account: {account}  Magic: {orderMagic}  Task: (Update Historical Trades)  Error processing trade: {e}"
+                            print(errMsg)
+                            log_error(errMsg)
         except KeyError as e:
             errMsg = f"Account: {account}  Task: (Update Historical Trades)  KeyError: {e} - Error accessing order details"
             print(errMsg)

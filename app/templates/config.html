@@ -82,7 +82,7 @@
 				</div>
 				<form
 					method="post"
-					action="{{ url_for('config') }}"
+					action="{{ url_for('config.config') }}"
 					style="
 						width: 100%;
 						align-items: center;
@@ -130,7 +130,6 @@
 							id="symbolSuffix"
 							name="symbolSuffix"
 							value="{{ config.symbolSuffix }}"
-							required
 						/>
 					</div>
 					<button type="submit">Save</button>

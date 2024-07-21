@@ -1,6 +1,7 @@
 
 from datetime import datetime
 import time
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.log_error import log_error
 from scripts.database.resetErrorLog import resetErrorLog
 from scripts.database.updateAccountStatus import updateAccountStatus
@@ -66,8 +67,9 @@ def trackData(accountData):
 
                 try:
                     for magic in getAllMagics(accountData):
-                        trades = getTradeAmount(magic, accountData)
-                        updateTradeAmount(account, magic, trades)
+                        if str(magic) not in getDeletedSets(account):
+                            trades = getTradeAmount(magic, accountData)
+                            updateTradeAmount(account, magic, trades)
                 except Exception as e:
                     errMsg = f"Account: {account}  Task: (Track Data)  Error updating lot sizes: {e}"
                     print(errMsg)
@@ -76,7 +78,8 @@ def trackData(accountData):
                     
                 try:
                     for magic in getAllMagics(accountData):
-                        updateLotSizes(account, magic, getLotSizes(magic, accountData))
+                        if str(magic) not in getDeletedSets(account):
+                            updateLotSizes(account, magic, getLotSizes(magic, accountData))
                 except Exception as e:
                     errMsg = f"Account: {account}  Task: (Track Data)  Error updating lot sizes: {e}"
                     print(errMsg)
@@ -84,7 +87,8 @@ def trackData(accountData):
                     
                 try:
                     for magic in getAllMagics(accountData):
-                        updateWinRate(account, magic, getWinRate(magic, accountData))
+                        if str(magic) not in getDeletedSets(account):
+                            updateWinRate(account, magic, getWinRate(magic, accountData))
                 except Exception as e:
                     errMsg = f"Account: {account}  Task: (Track Data)  Error updating win rate: {e}"
                     print(errMsg)
@@ -92,7 +96,8 @@ def trackData(accountData):
                     
                 try:
                     for magic in getAllMagics(accountData):
-                        updateTradeTimes(account, magic, getTradeTimes(magic, accountData))
+                        if str(magic) not in getDeletedSets(account):
+                            updateTradeTimes(account, magic, getTradeTimes(magic, accountData))
                 except Exception as e:
                     errMsg = f"Account: {account}  Task: (Track Data)  Error updating trade times: {e}"
                     print(errMsg)

@@ -1,6 +1,6 @@
-import datetime as datetime
 from scripts.database.createAccountFolder import createAccountFolder
 from scripts.database.findSet import findSet
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.getSets import getSets
 from scripts.database.log_error import log_error
 from scripts.tracker.createSet import createSet
@@ -36,12 +36,13 @@ def onOpen(account):
         sets = []
 
     for magic in magics:
-        try:
-            foundSet = findSet(sets, magic)
-            if not foundSet:
-                print(f"Creating set {magic}")
-                createSet(magic, accountData)
-        except Exception as e:
-            errMsg = f"Account: {account}  Magic: {magic}  Task: (On Open)  Error creating set: {e}"
-            print(errMsg)
-            log_error(errMsg)
+        if str(magic) not in getDeletedSets(account):
+            try:
+                foundSet = findSet(sets, magic)
+                if not foundSet:
+                    print(f"Creating set {magic}")
+                    createSet(magic, accountData)
+            except Exception as e:
+                errMsg = f"Account: {account}  Magic: {magic}  Task: (On Open)  Error creating set: {e}"
+                print(errMsg)
+                log_error(errMsg)

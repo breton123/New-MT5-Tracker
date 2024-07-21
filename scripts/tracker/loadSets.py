@@ -27,9 +27,8 @@ def loadSets(account_id, profileName):
     directory = os.getcwd()
     
     dataPath = getDataPath(account_id)
-    print(dataPath)
     powName = config["powName"]
-    defaultChartPath = f"{directory}\\chart01.chr"
+    defaultChartPath = f"{directory}\\scripts\\tracker\\packages\\chart01.chr"
     chartNumber = 1
 
     chartsPath = os.path.join(dataPath, 'MQL5', 'Profiles', 'Charts', profileName)
