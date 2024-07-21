@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	var tableBody = document.querySelector("#data-table tbody");
 	var accountSelect = document.getElementById("accountSelect");
 	var deleteSetButton = document.getElementById("deleteSetButton");
+	var downloadCSVButton = document.getElementById("downloadCSVButton");
 	deleteSetButton.disabled = true;
 
 	function enableDeleteButton() {
@@ -480,6 +481,59 @@ document.addEventListener("DOMContentLoaded", function () {
 			.catch((error) => {
 				window.location.reload();
 			});
+	}
+	downloadCSVButton.addEventListener("click", downloadCSV);
+
+	function downloadCSV() {
+		const url = window.location.href;
+		const urlObject = new URL(url);
+		const pathname = urlObject.pathname;
+		const segments = pathname.split("/");
+		const selectedAccount = segments.pop();
+
+		// Ensure magicNumbers is always an array, even if no checkboxes are selected
+		var magicNumbers = Array.from(
+			tableBody.querySelectorAll(".row-select:checked")
+		).map((checkbox) => {
+			return checkbox.closest("tr").querySelector("td:nth-child(3)")
+				.textContent; // Magic number
+		});
+
+		// If no magic numbers are selected, it will be an empty list
+		if (magicNumbers.length === 0) {
+			magicNumbers = [];
+		}
+
+		fetch("/downloadCSV", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				account: selectedAccount,
+				magicNumbers: magicNumbers,
+			}),
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				return response.blob(); // Convert response to a blob
+			})
+			.then((blob) => {
+				// Create a link element, use it to download the file
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "data.csv"; // Name of the file to be downloaded
+				document.body.appendChild(a);
+				a.click();
+				a.remove(); // Clean up
+				window.URL.revokeObjectURL(url);
+			})
+			.catch((error) =>
+				console.error("There was a problem with the fetch operation:", error)
+			);
 	}
 
 	deleteSetButton.addEventListener("click", deleteSet);

@@ -16,6 +16,7 @@ def create_app():
     from .routes.api.deleteSet import deleteSet_bp
     from .routes.api.getProfileSets import getProfileSets_bp
     from .routes.api.uploadSets import uploadSets_bp
+    from .routes.api.downloadCSV import downloadCSV_bp
    
 
     
@@ -30,5 +31,6 @@ def create_app():
     app.register_blueprint(deleteSet_bp)
     app.register_blueprint(getProfileSets_bp)
     app.register_blueprint(uploadSets_bp)
+    app.register_blueprint(downloadCSV_bp)
     
     return app

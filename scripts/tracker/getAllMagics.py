@@ -1,6 +1,7 @@
 import MetaTrader5 as mt5
 import datetime as datetime
 from datetime import datetime
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.log_error import log_error
 from scripts.tracker.openMt5 import openMt5
 
@@ -13,7 +14,8 @@ def getAllMagics(accountData):
         for order in orders:
             if order[6] not in magics:
                 if str(order[6]) != "0":
-                    magics.append(order[6])
+                    if str(order[6]) not in getDeletedSets(accountData["login"]):
+                        magics.append(order[6])
     except Exception as e:
         errMsg = f"Task: (Get All Magics - History Deals)  Error retrieving historical deals: {e}"
         print(errMsg)
