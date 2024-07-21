@@ -13,7 +13,6 @@ def getFrontendSets(account):
         folder_path = os.path.join(databaseFolder, account)
         if len(os.listdir(folder_path)) > 0:
             for file in os.listdir(folder_path):
-                print(file)
                 file_path = os.path.join(folder_path, file)
                 with open(file_path, 'r') as jsonFile:
                     try:

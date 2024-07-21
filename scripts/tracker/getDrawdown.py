@@ -3,6 +3,7 @@ import MetaTrader5 as mt5
 import datetime as datetime
 from datetime import datetime, timedelta
 
+from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.getReturnOnDrawdown import getReturnOnDrawdown
 from scripts.database.getSet import getSet
 from scripts.database.log_error import log_error
@@ -55,56 +56,57 @@ def getDrawdown(account):
             log_error(errMsg)
     
     for magic in profitList:
-        try:
-            currentDrawdown = round(profitList[magic], 2)
-            currentProfit = round(profitList[magic], 2)
-            if float(currentDrawdown) > 0:
-                currentDrawdown = 0
-            
-            print(f"Magic: {magic}  Drawdown: {currentDrawdown}  Profit: {currentProfit}")
-            updateDrawdown(magic, currentDrawdown, currentTime, accountData)
-            updateEquity(magic, currentProfit, currentTime, accountData)
-            
+        if str(magic) not in getDeletedSets(account):
             try:
-                setFile = getSet(magic, accountData)
+                currentDrawdown = round(profitList[magic], 2)
+                currentProfit = round(profitList[magic], 2)
+                if float(currentDrawdown) > 0:
+                    currentDrawdown = 0
+                
+                print(f"Magic: {magic}  Drawdown: {currentDrawdown}  Profit: {currentProfit}")
+                updateDrawdown(magic, currentDrawdown, currentTime, accountData)
+                updateEquity(magic, currentProfit, currentTime, accountData)
+                
+                try:
+                    setFile = getSet(magic, accountData)
+                except Exception as e:
+                    errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error getting set file: {e}"
+                    print(errMsg)
+                    log_error(errMsg)
+                    continue
+                
+                try:
+                    maxD = setFile["stats"]["maxDrawdown"]
+                except KeyError as e:
+                    errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  KeyError: {e} - 'maxDrawdown' key not found in set file"
+                    print(errMsg)
+                    log_error(errMsg)
+                    continue
+                
+                if maxD == "-":
+                    print(f"New Max Drawdown for {magic}")
+                    historicalProfit = getHistoricalProfit(magic, accountData)
+                    try:
+                        returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)
+                        updateMaxDrawdown(magic, currentDrawdown, account)
+                        updateReturnOnDrawdown(magic, returnOnDrawdown, account)
+                    except Exception as e:
+                        errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error updating max drawdown or return on drawdown: {e}"
+                        print(errMsg)
+                        log_error(errMsg)
+                elif currentDrawdown < float(maxD):
+                    print(f"New Max Drawdown for {magic}")
+                    historicalProfit = getHistoricalProfit(magic, accountData)
+                    try:
+                        returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)
+                        updateMaxDrawdown(magic, currentDrawdown, account)
+                        updateReturnOnDrawdown(magic, returnOnDrawdown, account)
+                    except Exception as e:
+                        errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error updating max drawdown or return on drawdown: {e}"
+                        print(errMsg)
+                        log_error(errMsg)
             except Exception as e:
-                errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error getting set file: {e}"
+                errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Unexpected error: {e}"
                 print(errMsg)
                 log_error(errMsg)
-                continue
-            
-            try:
-                maxD = setFile["stats"]["maxDrawdown"]
-            except KeyError as e:
-                errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  KeyError: {e} - 'maxDrawdown' key not found in set file"
-                print(errMsg)
-                log_error(errMsg)
-                continue
-            
-            if maxD == "-":
-                print(f"New Max Drawdown for {magic}")
-                historicalProfit = getHistoricalProfit(magic, accountData)
-                try:
-                    returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)
-                    updateMaxDrawdown(magic, currentDrawdown, account)
-                    updateReturnOnDrawdown(magic, returnOnDrawdown, account)
-                except Exception as e:
-                    errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error updating max drawdown or return on drawdown: {e}"
-                    print(errMsg)
-                    log_error(errMsg)
-            elif currentDrawdown < float(maxD):
-                print(f"New Max Drawdown for {magic}")
-                historicalProfit = getHistoricalProfit(magic, accountData)
-                try:
-                    returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)
-                    updateMaxDrawdown(magic, currentDrawdown, account)
-                    updateReturnOnDrawdown(magic, returnOnDrawdown, account)
-                except Exception as e:
-                    errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Error updating max drawdown or return on drawdown: {e}"
-                    print(errMsg)
-                    log_error(errMsg)
-        except Exception as e:
-            errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Drawdown)  Unexpected error: {e}"
-            print(errMsg)
-            log_error(errMsg)
     return currentTime
