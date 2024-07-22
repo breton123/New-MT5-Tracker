@@ -8,7 +8,7 @@ from scripts.tracker.openMt5 import openMt5
 def addHistoricalTrades(magic, accountData):
     openMt5(accountData)
     trades = []
-    
+
     try:
         magic = int(magic)
     except ValueError as e:
@@ -35,7 +35,7 @@ def addHistoricalTrades(magic, accountData):
                 profit = round(order[13], 2)
                 symbol = order[15]
                 newTrade = {
-                     "id": order[0],
+                    "id": order[0],
                     "time": orderTime,
                     "volume": volume,
                     "price": price,
@@ -44,7 +44,6 @@ def addHistoricalTrades(magic, accountData):
                     "magic": magic
                 }
                 trades.append(newTrade)
-                print(newTrade)
         except KeyError as e:
             errMsg = f"Magic: {magic}  Task: (Add Historical Trades)  KeyError: {e} - Error accessing order details"
             print(errMsg)

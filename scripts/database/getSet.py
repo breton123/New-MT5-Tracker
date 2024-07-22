@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.fileController import read
 from scripts.database.getDeletedSets import getDeletedSets
 from scripts.database.log_error import log_error
 from scripts.tracker.createSet import createSet
@@ -16,13 +17,9 @@ def getSet(magic, account):
         file_path = os.path.join(databaseFolder, account, f"{magic}.json")
         
         # Lock the file for reading
-        with open(file_path, "r") as file:
-            try:
-                portalocker.lock(file, portalocker.LOCK_SH)  # Shared lock for reading
-                data = json.load(file)
-                return data
-            finally:
-                portalocker.unlock(file)
+        data = read(file_path)
+        
+        return data
 
     except portalocker.LockException as e:
         errMsg = f"Account: {account}  Magic: {magic}  Task: (Get Set)  LockException: {e} - Failed to acquire lock for file {file_path}"

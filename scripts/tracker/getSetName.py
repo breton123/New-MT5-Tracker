@@ -8,7 +8,7 @@ from scripts.tracker.openMt5 import openMt5
 def getSetName(magic, accountData):
     openMt5(accountData)
     setName = f"Unnamed set {magic}"
-    
+
     try:
         magic = int(magic)
     except ValueError as e:
@@ -29,7 +29,6 @@ def getSetName(magic, accountData):
         try:
             orderMagic = order[6]
             if orderMagic == magic:
-                print(order[16])
                 if order[16] != "" and "[sl" not in order[16] and "[tp" not in order[16] and len(order[16]) > 5:
                     setName = order[16]
         except KeyError as e:

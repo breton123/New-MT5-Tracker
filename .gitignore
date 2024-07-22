@@ -1,0 +1,5 @@
+scripts/database/__pycache__/
+scripts/tracker/__pycache__/
+app/routes/__pycache__/
+app/__pycache__/
+app/routes/api/__pycache__/

@@ -1,5 +1,6 @@
 import os
 import portalocker
+from scripts.database.fileController import read
 
 user_profile = os.environ['USERPROFILE']
 databaseFolder = os.path.join(user_profile, 'AppData', 'Local', 'Mt5TrackerDatabase')
@@ -8,12 +9,7 @@ databaseFolder = os.path.join(user_profile, 'AppData', 'Local', 'Mt5TrackerDatab
 def getErrorLog():
     log_file_path = os.path.join(databaseFolder, "errorlog.txt")
     try:
-        with open(log_file_path, "r") as file:
-            try:
-                portalocker.lock(file, portalocker.LOCK_EX)
-                error_log = file.read()
-            finally:
-                portalocker.unlock(file)
+        error_log = read(log_file_path)
         return error_log
     except FileNotFoundError:
         print(f"Error log file '{log_file_path}' not found.")

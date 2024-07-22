@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from scripts.database.createAccount import createAccount
 
-createAccount_bp = Blueprint('createAccount', __name__)
+createAccount_bp = Blueprint('create_account', __name__)
 
 @createAccount_bp.route('/create_account', methods=['GET', 'POST'])
 def create_account():
@@ -24,5 +24,5 @@ def create_account():
             'status': "initializing"
         }
         createAccount(account_data)
-        return redirect(url_for('index'))
+        return redirect(url_for('index.index'))
     return render_template('createAccount.html')

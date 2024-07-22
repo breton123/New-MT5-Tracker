@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.fileController import read
 from scripts.database.log_error import log_error
 
 user_profile = os.environ['USERPROFILE']
@@ -11,15 +12,8 @@ def getTerminalFolder(account):
     try:
         file_path = os.path.join(databaseFolder, "Accounts", f"{account}.json")
         if os.path.exists(file_path):
-        # Lock the file for reading
-            with open(file_path, "r") as file:
-                try:
-                    portalocker.lock(file, portalocker.LOCK_SH)  # Shared lock for reading
-                        # Load account configuration
-                    config = json.load(file)
-                    return config.get("terminalFilePath", "")  
-                finally:
-                    portalocker.unlock(file)
+            config = read(file_path)
+            return config.get("terminalFilePath", "")  
         else:
             errMsg = f"Task: (Get Terminal Path)  File {file_path} not found while getting terminal path for account {account}"
             print(errMsg)

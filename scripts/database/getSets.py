@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.fileController import read
 from scripts.database.log_error import log_error
 
 user_profile = os.environ['USERPROFILE']
@@ -17,15 +18,8 @@ def getSets(account):
         if os.path.exists(folder_path) and len(os.listdir(folder_path)) > 0:
             for file in os.listdir(folder_path):
                 file_path = os.path.join(folder_path, file)
-                
-                # Attempt to load JSON data from each file
-                with open(file_path, 'r') as jsonFile:
-                    try:
-                        portalocker.lock(jsonFile, portalocker.LOCK_SH)  # Shared lock for reading
-                        data = json.load(jsonFile)
-                        sets.append(data)
-                    finally:
-                        portalocker.unlock(jsonFile)
+                data = read(file_path)
+                sets.append(data)
     except portalocker.LockException as e:
         errMsg = f"Account: {account}  Task: (Get Sets)  LockException: {e} - Failed to acquire lock for file"
         print(errMsg)

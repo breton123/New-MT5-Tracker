@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.fileController import read
 from scripts.database.log_error import log_error
 
 user_profile = os.environ['USERPROFILE']
@@ -11,12 +12,8 @@ def getAccounts():
     try:
         for file in os.listdir(os.path.join(databaseFolder, "Accounts")):
             file_path = os.path.join(databaseFolder, "Accounts", file)
-            with open(file_path, "r") as f:
-                try:
-                    portalocker.lock(f, portalocker.LOCK_SH)
-                    accounts.append(json.load(f))
-                finally:
-                    portalocker.unlock(f)
+            account = read(file_path)
+            accounts.append(account)
     except portalocker.LockException as e:
         errMsg = f"Task: (Get Accounts)  LockException: {e} - Failed to acquire lock for file {file_path}"
         print(errMsg)

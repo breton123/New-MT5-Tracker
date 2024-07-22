@@ -1,6 +1,7 @@
 import json
 import os
 import portalocker
+from scripts.database.fileController import write
 from scripts.database.log_error import log_error
 
 user_profile = os.environ['USERPROFILE']
@@ -17,15 +18,7 @@ def createAccount(account):
         
         file_path = os.path.join(accounts_folder, f"{account_login}.json")
 
-        # Lock the file for writing
-        with open(file_path, "w+") as file:
-            try:
-                portalocker.lock(file, portalocker.LOCK_EX)
-                json.dump(account, file, indent=4)
-                file.flush()  # Ensure all data is written to disk
-                os.fsync(file.fileno())
-            finally:
-                portalocker.unlock(file)
+        write(file_path, account)
 
     except portalocker.LockException as e:
         errMsg = f"Task: (Create Account)  LockException: {e} - Failed to acquire lock for file {file_path}"

@@ -31,7 +31,7 @@ def getDrawdown(account):
     drawdown = {}
     profitList = {}
     currentTime = round(time.time())
-    
+
     for position in positions:
         try:
             tradeid = position[7]
@@ -40,12 +40,12 @@ def getDrawdown(account):
             volume = position[9]
             profit = position[15]
             symbol = position[16]
-            
+
             if magic not in profitList:
                 profitList[magic] = profit
             else:
                 profitList[magic] += profit
-            
+
         except KeyError as e:
             errMsg = f"Account: {account}  Task: (Get Drawdown)  KeyError: {e} - Error accessing position details"
             print(errMsg)
@@ -54,7 +54,7 @@ def getDrawdown(account):
             errMsg = f"Account: {account}  Task: (Get Drawdown)  Unexpected error: {e}"
             print(errMsg)
             log_error(errMsg)
-    
+
     for magic in profitList:
         if str(magic) not in getDeletedSets(account):
             try:
@@ -62,11 +62,11 @@ def getDrawdown(account):
                 currentProfit = round(profitList[magic], 2)
                 if float(currentDrawdown) > 0:
                     currentDrawdown = 0
-                
+
                 print(f"Magic: {magic}  Drawdown: {currentDrawdown}  Profit: {currentProfit}")
                 updateDrawdown(magic, currentDrawdown, currentTime, accountData)
                 updateEquity(magic, currentProfit, currentTime, accountData)
-                
+
                 try:
                     setFile = getSet(magic, accountData)
                 except Exception as e:
@@ -74,7 +74,7 @@ def getDrawdown(account):
                     print(errMsg)
                     log_error(errMsg)
                     continue
-                
+
                 try:
                     maxD = setFile["stats"]["maxDrawdown"]
                 except KeyError as e:
@@ -82,9 +82,8 @@ def getDrawdown(account):
                     print(errMsg)
                     log_error(errMsg)
                     continue
-                
+
                 if maxD == "-":
-                    print(f"New Max Drawdown for {magic}")
                     historicalProfit = getHistoricalProfit(magic, accountData)
                     try:
                         returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)
@@ -95,7 +94,6 @@ def getDrawdown(account):
                         print(errMsg)
                         log_error(errMsg)
                 elif currentDrawdown < float(maxD):
-                    print(f"New Max Drawdown for {magic}")
                     historicalProfit = getHistoricalProfit(magic, accountData)
                     try:
                         returnOnDrawdown = getReturnOnDrawdown(magic, currentDrawdown, account, historicalProfit)

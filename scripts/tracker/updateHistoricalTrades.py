@@ -18,7 +18,7 @@ def updateHistoricalTrades(account):
     openMt5(account)
     accountData = account
     account = account["login"]
-    
+
     try:
         orders = mt5.history_deals_get(0, datetime.now())
     except Exception as e:
@@ -26,7 +26,7 @@ def updateHistoricalTrades(account):
         print(errMsg)
         log_error(errMsg)
         return
-    
+
     for order in orders:
         try:
             orderMagic = order[6]
@@ -41,7 +41,7 @@ def updateHistoricalTrades(account):
                             print(errMsg)
                             log_error(errMsg)
                             continue
-                        
+
                         try:
                             currentTrades = currentSet["trades"]
                         except KeyError as e:
@@ -49,7 +49,7 @@ def updateHistoricalTrades(account):
                             print(errMsg)
                             log_error(errMsg)
                             continue
-                        
+
                         try:
                             if not isTradeExists(currentTrades, order_id):
                                 orderTime = order[2]
