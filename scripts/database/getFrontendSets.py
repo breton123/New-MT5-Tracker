@@ -7,6 +7,8 @@ from scripts.database.log_error import log_error
 user_profile = os.environ['USERPROFILE']
 databaseFolder = os.path.join(user_profile, 'AppData', 'Local', 'Mt5TrackerDatabase')
 
+
+
 def getFrontendSets(account):
     account = str(account)
     sets = []

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	var tableBody = document.querySelector("#data-table tbody");
 	var accountSelect = document.getElementById("accountSelect");
+	var timeframeSelect = document.getElementById("timeframeSelect");
 	var deleteSetButton = document.getElementById("deleteSetButton");
 	var downloadCSVButton = document.getElementById("downloadCSVButton");
 	deleteSetButton.disabled = true;
@@ -50,9 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("max-drawdown").value = filterData.minDrawdown;
 		updateSliderValue("max-drawdown");
 
-		document.getElementById("profit-factor").min = filterData.minProfitFactor;
-		document.getElementById("profit-factor").max = filterData.maxProfitFactor;
-		document.getElementById("profit-factor").value = filterData.minProfitFactor;
+		document.getElementById("profit-factor").min =
+			filterData.minProfitFactor;
+		document.getElementById("profit-factor").max =
+			filterData.maxProfitFactor;
+		document.getElementById("profit-factor").value =
+			filterData.minProfitFactor;
 		updateSliderValue("profit-factor");
 
 		document.getElementById("return-drawdown").min =
@@ -70,7 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		document.getElementById("avg-drawdown").min = filterData.minAvgDrawdown;
 		document.getElementById("avg-drawdown").max = filterData.maxAvgDrawdown;
-		document.getElementById("avg-drawdown").value = filterData.minAvgDrawdown;
+		document.getElementById("avg-drawdown").value =
+			filterData.minAvgDrawdown;
 		updateSliderValue("avg-drawdown");
 
 		document.getElementById("win-rate").min = filterData.minWinRate;
@@ -82,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	//setRangeValues();
 	function setStatValues() {
 		newData = calculateStatData();
-		document.getElementById("selectedProfit").textContent = newData["profit"];
+		document.getElementById("selectedProfit").textContent =
+			newData["profit"];
 		document.getElementById("selectedMaxDrawdown").textContent =
 			newData["maxDrawdown"];
 		document.getElementById("selectedAvgDrawdown").textContent =
@@ -220,7 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	var selectedRows = Array.from(
 		tableBody.querySelectorAll(".row-select:checked")
 	).map((checkbox) => {
-		return checkbox.closest("tr").querySelector("td:nth-child(3)").textContent; // Magic number
+		return checkbox.closest("tr").querySelector("td:nth-child(3)")
+			.textContent; // Magic number
 	});
 
 	function resetTable() {
@@ -252,13 +259,21 @@ document.addEventListener("DOMContentLoaded", function () {
 		var drawdownMin = parseInt(
 			document.getElementById("maxDrawdownRange").value
 		);
-		var drawdownMax = parseInt(document.getElementById("maxDrawdownRange").max);
-		var daysLiveMin = parseInt(document.getElementById("daysLiveRange").value);
-		var daysLiveMax = parseInt(document.getElementById("daysLiveRange").max);
+		var drawdownMax = parseInt(
+			document.getElementById("maxDrawdownRange").max
+		);
+		var daysLiveMin = parseInt(
+			document.getElementById("daysLiveRange").value
+		);
+		var daysLiveMax = parseInt(
+			document.getElementById("daysLiveRange").max
+		);
 		var drawdownWindow = parseInt(
 			document.getElementById("drawdownWindow").value
 		);
-		var equityWindow = parseInt(document.getElementById("equityWindow").value);
+		var equityWindow = parseInt(
+			document.getElementById("equityWindow").value
+		);
 
 		function parseDrawdown(drawdown) {
 			return drawdown === "-" ? 0 : parseInt(drawdown);
@@ -335,7 +350,10 @@ document.addEventListener("DOMContentLoaded", function () {
 			};
 		});
 
-		var allDrawdownTraces = [...filteredGraphData, ...smoothedDrawdownTraces];
+		var allDrawdownTraces = [
+			...filteredGraphData,
+			...smoothedDrawdownTraces,
+		];
 		var allEquityTraces = [...filteredEquityData, ...smoothedEquityTraces];
 
 		Plotly.react("drawdownGraph", smoothedDrawdownTraces, drawdownLayout);
@@ -532,11 +550,53 @@ document.addEventListener("DOMContentLoaded", function () {
 				window.URL.revokeObjectURL(url);
 			})
 			.catch((error) =>
-				console.error("There was a problem with the fetch operation:", error)
+				console.error(
+					"There was a problem with the fetch operation:",
+					error
+				)
 			);
 	}
 
 	deleteSetButton.addEventListener("click", deleteSet);
+	//deleteSetButton.addEventListener("click", deleteSet);
+
+	timeframeSelect.addEventListener("change", function () {
+		var timeframe = timeframeSelect.value;
+		const url = window.location.href;
+		const urlObject = new URL(url);
+		const pathname = urlObject.pathname;
+		const segments = pathname.split("/");
+		const selectedAccount = segments.pop();
+		fetch(
+			`http://127.0.0.1:5000/api/getDrawdownGraph/${selectedAccount}/${timeframe}`
+		)
+			.then((response) => response.json())
+			.then((data) => {
+				var drawdownLayout = {
+					title: "Drawdown",
+					plot_bgcolor: "#222",
+					paper_bgcolor: "#222",
+					width: newWidth,
+					height: 800,
+					font: {
+						color: "#fff",
+					},
+					xaxis: {
+						title: "Time",
+						color: "#fff",
+						gridcolor: "#444",
+					},
+					yaxis: {
+						title: "Drawdown",
+						color: "#fff",
+						gridcolor: "#444",
+					},
+				};
+				Plotly.react("drawdownGraph", data, drawdownLayout);
+				//Plotly.react("equityGraph", smoothedEquityTraces, equityLayout);
+			})
+			.catch((error) => console.error("Error:", error));
+	});
 
 	accounts.forEach((account) => {
 		var option = document.createElement("option");

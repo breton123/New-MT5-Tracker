@@ -8,7 +8,7 @@ def deleteSetFiles(account, magics):
      account = account["login"]
      deletedFolder = os.path.join(databaseFolder, "deletedSets")
      deletedSetsFolder = os.path.join(databaseFolder, "deletedSets", account)
-     
+
      if not os.path.exists(deletedFolder):
           os.makedirs(deletedFolder)
      if not os.path.exists(deletedSetsFolder):

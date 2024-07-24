@@ -18,12 +18,18 @@ def write(file_path, content):
 
 def read(file_path):
      with open(file_path, "r") as file:
+          content = {}
           try:
                portalocker.lock(file, portalocker.LOCK_SH)
                content = json.load(file)
           finally:
                portalocker.unlock(file)
+               if content == {}:
+                    delete(file_path)
                return content
+
+def delete(file_path):
+     os.remove(file_path)
 
 def rread(file_path):
      if ".gz" not in file_path:

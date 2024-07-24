@@ -34,7 +34,7 @@
 			<a href="#" class="logo">
 				<i class="bx bx-code-alt"></i>
 				<div class="logo-name"><span>POW</span>Tracker</div>
-				
+
 			</a>
 			<ul class="side-menu">
 				<li>
@@ -54,7 +54,7 @@
 				</li>
 			</ul>
 			<ul class="side-menu">
-				
+
 			</ul>
 		</div>
 		<!-- End of Sidebar -->
@@ -78,7 +78,7 @@
 					<i class="bx bx-bell"></i>
 					<span class="count">12</span>
 				</a>
-				
+
 			</nav>
 
 			<!-- End of Navbar -->
@@ -93,7 +93,7 @@
 							<li><a href="#" class="active">34534</a></li>
 						</ul>
 					</div>
-					
+
 					<div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
 						<button id="deleteSetButton" disabled class="button">Delete Set</button>
 						<select id="accountSelect" class="button" disabled>
@@ -188,7 +188,7 @@
 													<span id="min-profit-value">50</span>
 												</div>
 											</div>
-										
+
 											<div class="filter-group">
 												<label for="max-drawdown">Max Drawdown</label>
 												<div class="slider-container">
@@ -196,7 +196,7 @@
 													<span id="max-drawdown-value">50</span>
 												</div>
 											</div>
-										
+
 											<div class="fi	lter-group">
 												<label for="avg-drawdown">Max Average Drawdown</label>
 												<div class="slider-container">
@@ -251,11 +251,11 @@
 												</div>
 											</div>
 										</div>
-										
+
 									</div>
 									<button style="width: 20%;" class="button">Apply Filters</button>
 								</div>
-								   
+
 							</div>
 						</div>
 						<table id="data-table">
@@ -286,6 +286,21 @@
 						</table>
 					</div>
 					<div class="graph-section">
+						<select id="timeframeSelect" class="button" >
+							<option value="10s">10s</option>
+							<option value="30s">30s</option>
+							<option value="1m">1m</option>
+							<option value="5m">5m</option>
+							<option value="10m">10m</option>
+							<option value="15m" selected>15m</option>
+							<option value="30m">30m</option>
+							<option value="45m">45m</option>
+							<option value="1h">1h</option>
+							<option value="2h">2h</option>
+							<option value="4h">4h</option>
+							<option value="1D">1D</option>
+
+						</select>
 						<div id="drawdownGraph"></div>
 						<div id="equityGraph" style="margin-top: 20px"></div>
 					</div>

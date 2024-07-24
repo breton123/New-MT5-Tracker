@@ -30,6 +30,6 @@ def account(account_id):
         if account["type"] == "slave":
             slaveAccounts.append(account["login"])
     if len(sets) != 0:
-        return render_template('account.html', account_id = {"account_id": account_id}, sets=sets, drawdownData = getDrawdownGraphData(account_id), equityData = getEquityGraphData(account_id), filterData = getFilterData(account_id), accounts=slaveAccounts, accountProfit=round(accountProfit,2), accountDrawdown=round(accountMaxDrawdown,2), testSets=testSets, accountAverageDrawdown=round(accountAverageDrawdown, 2))
+        return render_template('account.html', account_id = {"account_id": account_id}, sets=sets, drawdownData = getDrawdownGraphData(account_id, "15m"), equityData = getDrawdownGraphData(account_id, "1h"), filterData = getFilterData(account_id), accounts=slaveAccounts, accountProfit=round(accountProfit,2), accountDrawdown=round(accountMaxDrawdown,2), testSets=testSets, accountAverageDrawdown=round(accountAverageDrawdown, 2))
     else:
         return render_template('empty_account.html')

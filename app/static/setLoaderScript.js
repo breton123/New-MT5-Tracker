@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		.getElementById("accountSelect")
 		.addEventListener("change", updateProfiles);
 
-	document.getElementById("profileSelect").addEventListener("change", getSets);
+	document
+		.getElementById("profileSelect")
+		.addEventListener("change", getSets);
 	document
 		.getElementById("profileNameInput")
 		.addEventListener("change", updateProfileName);
