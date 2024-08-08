@@ -13,16 +13,15 @@ def create_account():
         else:
             status = "error"
         account_data = {
-            'name': request.form['name'],
-            'login': request.form['login'],
-            'password': request.form['password'],
-            'server': request.form['server'],
-            'deposit': request.form['deposit'],
-            'dataPath': request.form['dataPath'],
-            'terminalFilePath': request.form['terminalFilePath'],
-            'type': request.form['type'],
+            'terminalFilePath': request.form.getlist('terminalFilePath'),
             'status': "initializing"
         }
+        for key, val in request.form.items():
+            if key == "terminalFilePath":
+                pass
+            else:
+                account_data[key] = val
+        print(account_data)
         createAccount(account_data)
         return redirect(url_for('index.index'))
     return render_template('createAccount.html')
