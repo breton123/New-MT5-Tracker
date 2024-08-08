@@ -1,7 +1,7 @@
 import json
 import os
 import portalocker
-from scripts.database.fileController import read
+from scripts.database.fileController import read, write
 from scripts.database.log_error import log_error
 
 user_profile = os.environ['USERPROFILE']
@@ -15,6 +15,7 @@ def insertTrade(magic, trade, account):
 
         set_data = read(file_path)
         set_data["trades"].append(trade)
+        write(file_path, set_data)
 
     except portalocker.LockException as e:
         errMsg = f"Account: {account}  Magic: {magic}  Task: (Insert Trade)  LockException: {e} - Failed to acquire lock for file {file_path}"

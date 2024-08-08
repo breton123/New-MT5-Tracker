@@ -1,7 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+	--light: #f6f6f9;
+	--primary: #1976d2;
+	--light-primary: #cfe8ff;
+	--grey: #eee;
+	--dark-grey: #aaaaaa;
+	--dark: #363949;
+	--danger: #d32f2f;
+	--light-danger: #fecdd3;
+	--warning: #fbc02d;
+	--light-warning: #fff2c6;
+	--success: #388e3c;
+	--light-success: #bbf7d0;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Poppins", sans-serif;
+}
+
 body {
-	background-color: #1e1e1e;
-	color: #c7c7c7;
-	font-family: Arial, sans-serif;
+	background: var(--grey);
+	color: var(--dark);
+	font-family: "Poppins", sans-serif;
 	margin: 0;
 	padding: 0;
 }
@@ -11,6 +35,7 @@ body {
 	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 }
 
 header {
@@ -18,23 +43,31 @@ header {
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 20px;
+	width: 100%;
+	max-width: 600px;
 }
 
 header h1 {
 	margin: 0;
 	font-size: 2em;
+	color: var(--dark);
 }
 
 header button {
-	background-color: #3a3a3a;
-	color: #c7c7c7;
-	border: 1px solid #5a5a5a;
-	padding: 10px 20px;
+	background-color: var(--light);
+	border: 2px solid var(--dark);
+	color: var(--dark);
+	padding: 8px 13px;
+	text-align: center;
+	font-size: 14px;
 	cursor: pointer;
+	border-radius: 8px;
+	transition: background-color 0.3s, color 0.3s;
 }
 
 header button:hover {
-	background-color: #575757;
+	background-color: var(--dark);
+	color: var(--light);
 }
 
 .form-section {
@@ -46,10 +79,10 @@ header button:hover {
 }
 
 form {
-	background-color: #2a2a2a;
+	background-color: var(--light);
 	padding: 20px;
-	border: 1px solid #3a3a3a;
-	border-radius: 5px;
+	border: 1px solid var(--grey);
+	border-radius: 10px;
 	width: 100%;
 	max-width: 600px;
 }
@@ -61,27 +94,90 @@ form {
 .form-group label {
 	display: block;
 	margin-bottom: 5px;
+	font-weight: 600;
+	color: var(--dark);
 }
 
 .form-group input,
 .form-group select {
 	width: 100%;
 	padding: 10px;
-	border: 1px solid #5a5a5a;
-	border-radius: 3px;
-	background-color: #3a3a3a;
-	color: #c7c7c7;
+	border: 1px solid var(--dark-grey);
+	border-radius: 5px;
+	background-color: var(--dark-grey);
+	color: var(--dark);
 }
 
 .form-group button {
-	background-color: #3a3a3a;
-	color: #c7c7c7;
-	border: 1px solid #5a5a5a;
-	padding: 10px 20px;
+	background-color: var(--primary);
+	color: var(--light);
+	border: none;
+	padding: 10px;
 	cursor: pointer;
-	width: 100%;
+	border-radius: 8px;
+	transition: background-color 0.3s;
 }
 
 .form-group button:hover {
-	background-color: #575757;
+	background-color: var(--dark);
+	color: var(--light);
+}
+
+.terminal-input {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.terminal-input label {
+	flex-shrink: 0;
+	color: var(--dark);
+}
+
+.terminal-input input {
+	flex-grow: 1;
+	padding: 10px;
+	border: 1px solid var(--dark-grey);
+	border-radius: 5px;
+	background-color: var(--light-primary);
+	color: var(--dark);
+}
+
+.terminal-input button {
+	flex-shrink: 0;
+	padding: 8px 12px;
+	background-color: var(--danger);
+	color: var(--light);
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.terminal-input button:hover {
+	background-color: var(--light-danger);
+	color: var(--danger);
+}
+
+#addNewTerminal {
+	display: block;
+	margin: 20px auto 0;
+	background-color: var(--success);
+	color: var(--light);
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	border-radius: 8px;
+	transition: background-color 0.3s;
+}
+
+#addNewTerminal:hover {
+	background-color: var(--dark);
+	color: var(--light);
+}
+
+#maxSets {
+	text-align: center;
+	margin-top: 20px;
+	font-size: 1.2em;
+	color: var(--dark);
 }

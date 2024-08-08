@@ -19,18 +19,20 @@ def loadSets(account_id, profileName):
     setsFolder = os.path.join(databaseFolder, "Sets", str(account_id), profileName)
     config = getConfig()
     terminalPath = ""
+    terminalIndex = 0
     accounts = getAccounts()
     for account in accounts:
         if account["login"] == account_id:
-            terminalPath = account["terminalFilePath"]
-        
+            terminals = account["terminalFilePath"]
+
     directory = os.getcwd()
-    
-    dataPath = getDataPath(account_id)
+
     powName = config["powName"]
     defaultChartPath = f"{directory}\\scripts\\tracker\\packages\\chart01.chr"
     chartNumber = 1
 
+    terminalPath = terminals[terminalIndex]
+    dataPath = getDataPath(terminalPath)
     chartsPath = os.path.join(dataPath, 'MQL5', 'Profiles', 'Charts', profileName)
 
     if os.path.isdir(chartsPath):
@@ -38,7 +40,7 @@ def loadSets(account_id, profileName):
     else:
         os.makedirs(chartsPath)
         chartNumber = 1
-        
+
     currentSets = getSets(account_id)
     currentMagics = []
     for set in currentSets:
@@ -46,12 +48,27 @@ def loadSets(account_id, profileName):
             currentMagics.append(set["magic"])
         except:
             pass
-    
+
     for setFile in os.listdir(setsFolder):
+        if chartNumber > 90:
+            terminalIndex += 1
+            try:
+                terminalPath = terminals[terminalIndex]
+                dataPath = getDataPath(terminalPath)
+                chartsPath = os.path.join(dataPath, 'MQL5', 'Profiles', 'Charts', profileName)
+
+                if os.path.isdir(chartsPath):
+                    chartNumber = len([f for f in os.listdir(chartsPath) if os.path.isfile(os.path.join(chartsPath, f))])
+                else:
+                    os.makedirs(chartsPath)
+                    chartNumber = 1
+            except:
+                pass
+
         defaultConfig = parse_chr_file(defaultChartPath)
         magicNumber = setFile.split("_")[-1].replace(".set","")
         symbol = setFile.split(" ")[0] + config["symbolSuffix"]
-        
+
         if magicNumber not in currentMagics:
             newSet = {
                 "stats": {
@@ -87,7 +104,7 @@ def loadSets(account_id, profileName):
         output_chr_file_path = f'{dataPath}\\MQL5\\Profiles\\Charts\\{profileName}\\chart0{chartNumber}.chr'
         write_chr_file(output_chr_file_path, defaultConfig)
         chartNumber += 1
-    
-    terminalConfigPath = os.path.join(getDataPath(account_id), "config", "common.ini")
+
+    terminalConfigPath = os.path.join(getDataPath(terminalPath), "config", "common.ini")
     closeTerminal(terminalPath)
     update_ini_file(terminalConfigPath, profileName)

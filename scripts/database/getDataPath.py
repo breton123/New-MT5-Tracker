@@ -7,13 +7,15 @@ user_profile = os.environ['USERPROFILE']
 databaseFolder = os.path.join(user_profile, 'AppData', 'Local', 'Mt5TrackerDatabase')
 terminalsFolder = os.path.join(user_profile, 'AppData', 'Roaming', 'MetaQuotes', 'Terminal')
 
-def getDataPath(account_id):
-    terminalFolder = getTerminalFolder(account_id).replace("\\terminal64.exe", "")
+def getDataPath(terminalFolder):
+    terminalFolder = terminalFolder.replace("\\terminal64.exe", "")
+    #print(terminalFolder)
     for folder in os.listdir(terminalsFolder):
         try:
             terminalFolderFilePath = os.path.join(terminalsFolder, folder, "origin.txt")
             with open(terminalFolderFilePath, "r", encoding=detect_encoding(terminalFolderFilePath)) as file:
-                if terminalFolder == file.read():
+                if terminalFolder == file.read() or terminalFolder+"\\terminal64.exe" == file.read():
+                    print("here")
                     dataPath = os.path.join(terminalsFolder, folder)
                     return dataPath
         except:

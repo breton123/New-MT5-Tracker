@@ -5,11 +5,65 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Create Account</title>
 		<link
+			href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
 			rel="stylesheet"
-			href="{{ url_for('static', filename='createAccount.css') }}"
 		/>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='createAccount.css') }}" />
+			<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='test.css') }}" />
 	</head>
-	<body>
+	<body class="dark">
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<a href="#" class="logo">
+				<i class="bx bx-code-alt"></i>
+				<div class="logo-name"><span>POW</span>Tracker</div>
+			</a>
+			<ul class="side-menu">
+				<li>
+					<a href="/"><i class="bx bxs-dashboard"></i>Accounts</a>
+				</li>
+				<li>
+					<a href="/"><i class="bx bx-store-alt"></i>Tracker</a>
+				</li>
+				<li>
+					<a href="/set_loader"><i class="bx bx-analyse"></i>Set Loader</a>
+				</li>
+				<li>
+					<a href="/config"><i class="bx bx-message-square-dots"></i>Config</a>
+				</li>
+				<li>
+					<a href="/error_log"><i class="bx bx-group"></i>Error Log</a>
+				</li>
+			</ul>
+			<ul class="side-menu"></ul>
+		</div>
+		<!-- End of Sidebar -->
+
+		<!-- Main Content -->
+		<div class="content">
+			<!-- Navbar -->
+			<nav>
+				<i class="bx bx-menu"></i>
+				<form action="#">
+					<div class="form-input" style="display: none">
+						<input type="search" placeholder="Search..." />
+						<button class="search-btn" type="submit">
+							<i class="bx bx-search"></i>
+						</button>
+					</div>
+				</form>
+				<input type="checkbox" id="theme-toggle" hidden />
+				<label for="theme-toggle" class="theme-toggle"></label>
+				<a href="#" class="notif">
+					<i class="bx bx-bell"></i>
+					<span class="count">12</span>
+				</a>
+			</nav>
+		<main>
 		<div class="container">
 			<header>
 				<h1>Create New Account</h1>
@@ -22,8 +76,7 @@
 				<form
 					id="create-account-form"
 					method="POST"
-					action="{{ url_for('create_account.create_account') }}"
-				>
+					action="{{ url_for('create_account.create_account') }}">
 					<div class="form-group">
 						<label for="name">Account Name:</label>
 						<input type="text" id="name" name="name" required />
@@ -34,7 +87,11 @@
 					</div>
 					<div class="form-group">
 						<label for="password">Password:</label>
-						<input type="password" id="password" name="password" required />
+						<input
+							type="password"
+							id="password"
+							name="password"
+							required />
 					</div>
 					<div class="form-group">
 						<label for="server">Server:</label>
@@ -42,21 +99,31 @@
 					</div>
 					<div class="form-group">
 						<label for="deposit">Deposit per set:</label>
-						<input type="text" id="deposit" name="deposit" required />
-					</div>
-					<div class="form-group">
-						<label for="terminalFilePath">Terminal File Path:</label>
 						<input
 							type="text"
-							id="terminalFilePath"
-							name="terminalFilePath"
-							required
-						/>
+							id="deposit"
+							name="deposit"
+							required />
 					</div>
-					<div class="form-group">
-						<label for="dataPath">Data Path:</label>
-						<input type="text" id="dataPath" name="dataPath" required />
+					<div id="newTerminalContainer">
+						<div class="form-group terminal-input">
+							<label for="terminalFilePath"
+								>Terminal File Path:</label
+							>
+							<input
+								type="text"
+								id="terminalFilePath"
+								name="terminalFilePath"
+								required />
+							<button
+								type="button"
+								onclick="removeTerminal(this)">
+								Remove
+							</button>
+						</div>
 					</div>
+					<button id="addNewTerminal">Add New Terminal</button>
+					<div id="maxSets">Maximum Sets: 100</div>
 					<div class="form-group">
 						<label for="type">Type:</label>
 						<select id="type" name="type" required>
@@ -70,5 +137,49 @@
 				</form>
 			</section>
 		</div>
+	</main>
+		<script>
+			let maxSets = 100;
+
+			document
+				.getElementById("addNewTerminal")
+				.addEventListener("click", function () {
+					addNewTerminal();
+				});
+
+			function addNewTerminal() {
+				maxSets += 100;
+				const terminalContainer = document.getElementById(
+					"newTerminalContainer"
+				);
+				const newTerminalInput = document.createElement("div");
+				newTerminalInput.className = "form-group terminal-input";
+
+				newTerminalInput.innerHTML = `
+				   <label for="terminalFilePath">Terminal File Path:</label>
+				   <input type="text" name="terminalFilePath" required />
+				   <button type="button" onclick="removeTerminal(this)">Remove</button>
+			    `;
+
+				terminalContainer.appendChild(newTerminalInput);
+				updateMaxSets();
+			}
+
+			function removeTerminal(button) {
+				const terminalContainer = document.getElementById(
+					"newTerminalContainer"
+				);
+				terminalContainer.removeChild(button.parentNode);
+				maxSets -= 100;
+				updateMaxSets();
+			}
+
+			function updateMaxSets() {
+				document.getElementById(
+					"maxSets"
+				).textContent = `Maximum Sets: ${maxSets}`;
+			}
+		</script>
+		<script src="{{url_for('static', filename='test.js')}}"></script>
 	</body>
 </html>

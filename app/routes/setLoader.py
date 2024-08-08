@@ -11,5 +11,5 @@ def set_loader():
     profiles = {}
     for account in accounts:
         accountIDs.append(account["login"])
-        profiles[account["login"]] = getProfiles(account["login"])
+        profiles[account["login"]] = getProfiles(account)
     return render_template('uploadSets.html', sets=[], accounts=accountIDs, profiles=profiles)

@@ -18,24 +18,26 @@ from scripts.tracker.parseCopierFile import parseCopierFile
 from scripts.tracker.read_ini_file import read_ini_file
 from scripts.tracker.terminalController import closeTerminal
 
-def deleteSet(magic, accountData):
-     openMt5(accountData)
-     try:
-          account = accountData["login"]
-          terminalPath = accountData["terminalFilePath"]
-          configPath = os.path.join(getDataPath(account), "config", "common.ini")
-          profile = getPreviousProfile(configPath)
-          profilePath = os.path.join(getDataPath(account), "MQL5", "Profiles", "Charts", profile)
-          chartFiles = findChartPath(profilePath, magic)
+def deleteSet(magic, account):
+     for terminal in account["terminalFilePath"]:
+          accountData = account
+          accountData["terminalFilePath"] = terminal
+          openMt5(accountData)
           try:
-               for path in chartFiles:
-                    os.remove(path)
-               closeTerminal(terminalPath)
-               print(f"Deleted set {magic}")
-          except:
-               print(f"Could not find chart or {magic} in the current profile. Maybe the profile has not been saved?")
-     except Exception as e:
-          err = f"Failed to delete set Error: {e}"
-          print(err)
-          log_error(err)
-     
+               account = accountData["login"]
+               terminalPath = accountData["terminalFilePath"]
+               configPath = os.path.join(getDataPath(terminal), "config", "common.ini")
+               profile = getPreviousProfile(configPath)
+               profilePath = os.path.join(getDataPath(terminal), "MQL5", "Profiles", "Charts", profile)
+               chartFiles = findChartPath(profilePath, magic)
+               try:
+                    for path in chartFiles:
+                         os.remove(path)
+                    closeTerminal(terminalPath)
+                    print(f"Deleted set {magic}")
+               except:
+                    print(f"Could not find chart or {magic} in the current profile. Maybe the profile has not been saved?")
+          except Exception as e:
+               err = f"Failed to delete set Error: {e}"
+               print(err)
+               log_error(err)
